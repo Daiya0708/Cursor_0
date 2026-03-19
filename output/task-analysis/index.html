@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>日報タスク分析</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="appHeader">
+      <div class="appHeader__inner">
+        <div class="appTitle">
+          <div class="appTitle__name">日報タスク分析</div>
+          <div class="appTitle__desc">日報テキストからタスクを抽出して集計・可視化します（オフライン可）。</div>
+        </div>
+        <div class="headerActions">
+          <button id="btnDownloadJson" class="btn btn--ghost" disabled>抽出結果をJSONで保存</button>
+          <button id="btnClear" class="btn btn--danger" disabled>クリア</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="appMain">
+      <section class="panel">
+        <h2 class="panel__title">入力</h2>
+
+        <div class="grid grid--2">
+          <div class="field">
+            <label class="field__label" for="fileInput">ファイル選択（複数可）</label>
+            <input id="fileInput" class="field__control" type="file" multiple />
+            <div class="field__help">例: <code>output\20xx0319</code> / <code>output\20xx0312-0318_架空日報.md</code> / <code>input\20XX0319</code></div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="pasteInput">貼り付け（任意）</label>
+            <textarea id="pasteInput" class="field__control field__control--textarea" placeholder="ここに日報テキスト（Markdown/箇条書き）を貼り付け"></textarea>
+            <div class="field__help">貼り付け内容も1ファイル分として解析します。</div>
+          </div>
+        </div>
+
+        <div class="panel__actions">
+          <button id="btnAnalyze" class="btn btn--primary">解析する</button>
+          <div id="inputSummary" class="muted"></div>
+        </div>
+
+        <div id="parseWarnings" class="callout callout--warn" hidden>
+          <div class="callout__title">解析メモ</div>
+          <ul id="warningsList" class="callout__list"></ul>
+        </div>
+      </section>
+
+      <section class="panel" id="filtersPanel" hidden>
+        <h2 class="panel__title">フィルタ</h2>
+        <div class="grid grid--3">
+          <div class="field">
+            <label class="field__label" for="filterFrom">日付（From）</label>
+            <input id="filterFrom" class="field__control" type="date" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="filterTo">日付（To）</label>
+            <input id="filterTo" class="field__control" type="date" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="filterStatus">進捗</label>
+            <select id="filterStatus" class="field__control">
+              <option value="">すべて</option>
+              <option value="done">完了</option>
+              <option value="waiting_review">レビュー待ち</option>
+              <option value="ongoing">継続</option>
+              <option value="percent">%</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid--2">
+          <div class="field">
+            <label class="field__label" for="filterQuery">タスク名検索</label>
+            <input id="filterQuery" class="field__control" type="text" placeholder="例: 提案 / ABテスト / 講座" />
+          </div>
+          <div class="field field--inline">
+            <label class="checkbox">
+              <input id="filterHideUnknownDate" type="checkbox" />
+              日付不明を隠す
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="resultsPanel" hidden>
+        <h2 class="panel__title">集計</h2>
+
+        <div class="kpis" id="kpis"></div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__title">タスク別ランキング（件数）</div>
+            <div id="chartTaskCount" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card__title">進捗内訳</div>
+            <div id="chartStatus" class="chart"></div>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__title">稼働（合計/日別推移）</div>
+            <div id="workTimeSummary" class="muted"></div>
+            <div id="chartWorkTime" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card__title">明日の予定（P1〜P3）</div>
+            <div id="planKeywords" class="muted"></div>
+            <div id="listPlans" class="list"></div>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__title">課題・詰まり（頻出）</div>
+            <div id="issueKeywords" class="muted"></div>
+            <div id="listIssues" class="list"></div>
+          </div>
+          <div class="card">
+            <div class="card__title">メモ</div>
+            <div class="muted">
+              - 「課題」はテンプレ内の <code>### 3. 課題・詰まり</code> から抽出します。<br />
+              - 生テキスト入力は課題を抽出できない場合があります。
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">日付別タイムライン</div>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </section>
+
+      <footer class="appFooter">
+        <div class="muted">
+          - 解析できない行や曖昧な値は「その他/不明」として保持します。<br />
+          - 大量データでは動作が重くなる場合があります（まずは数十ファイル想定）。
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
