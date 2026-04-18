@@ -52,3 +52,74 @@ body{
 /* 画面切り替え */
 .screen{ display:none; min-height:100vh; padding:32px 24px 80px; }
 .screen.active{ display:block; }
+
+/* ===== シーン画面（テキスト＋選択肢） ===== */
+#scene.active{
+  display:flex;
+  align-items:flex-end;
+  padding:0;
+}
+.scene-box{
+  width:100%;
+  min-height:220px;
+  padding:24px 28px 28px;
+  background:linear-gradient(180deg,#120e16 0%, #0c0910 100%);
+  border-top:1px solid var(--line);
+}
+.speaker{
+  display:inline-block;
+  font-weight:700;
+  font-size:15px;
+  letter-spacing:.06em;
+  padding:4px 12px;
+  border-radius:8px;
+  margin-bottom:10px;
+  background:rgba(255,106,162,.12);
+  color:#ffd5e4;
+  border:1px solid rgba(255,106,162,.25);
+}
+.speaker:empty{ display:none; }
+.speaker.narration{
+  background:rgba(255,255,255,.05);
+  color:#c9bcc4;
+  border-color:var(--line);
+}
+.line{
+  font-size:17px;
+  line-height:2;
+  min-height:2em;
+  white-space:pre-wrap;
+}
+.next-hint{
+  color:#7a6b73;
+  font-size:11px;
+  text-align:right;
+  margin-top:10px;
+  letter-spacing:.1em;
+}
+
+/* ===== 選択肢ボタン ===== */
+.choices{
+  display:none;              /* JSで flex に切替 */
+  flex-direction:column;
+  gap:10px;
+  margin-top:14px;
+}
+.choice{
+  text-align:left;
+  padding:14px 18px;
+  border:1px solid rgba(255,106,162,.25);
+  border-radius:12px;
+  background:rgba(255,106,162,.06);
+  color:var(--ink);
+  cursor:pointer;
+  font:inherit;
+  font-size:15px;
+  line-height:1.6;
+  transition:background .15s ease, transform .1s ease, border-color .15s ease;
+}
+.choice:hover{
+  background:rgba(255,106,162,.12);
+  border-color:rgba(255,106,162,.5);
+}
+.choice:active{ transform:translateY(1px); }

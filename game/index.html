@@ -9,7 +9,7 @@
 <body>
   <div id="app">
     <!-- タイトル画面 -->
-    <section id="title" class="screen active"></section>
+    <section id="title" class="screen"></section>
 
     <!-- キャラ紹介 -->
     <section id="gallery" class="screen"></section>
@@ -18,7 +18,14 @@
     <section id="prologue" class="screen"></section>
 
     <!-- 本編シーン（立ち絵・テキスト・選択肢） -->
-    <section id="scene" class="screen"></section>
+    <section id="scene" class="screen">
+      <div class="scene-box">
+        <div class="speaker" id="speaker"></div>
+        <div class="line" id="line"></div>
+        <div class="choices" id="choices"></div>
+        <div class="next-hint" id="next-hint">▼ クリックで進む</div>
+      </div>
+    </section>
 
     <!-- ホームハブ（行動選択） -->
     <section id="hub" class="screen"></section>
@@ -26,5 +33,6 @@
     <!-- エンディング -->
     <section id="ending" class="screen"></section>
   </div>
+  <script src="js/engine.js"></script>
 </body>
 </html>
