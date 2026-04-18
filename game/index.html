@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>キャンパスハート — 4つの春、ひとつの答え</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- タイトル画面 -->
+    <section id="title" class="screen active">
+      <!-- 桜の花びら演出 -->
+      <div class="petals" aria-hidden="true">
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+      </div>
+      <div class="title-wrap">
+        <div class="title-brand">CAMPUS♡HEART</div>
+        <h1 class="title-ja">キャンパスハート</h1>
+        <p class="title-sub">— 4つの春、ひとつの答え —</p>
+        <p class="title-copy">
+          春、東都大学。<br>
+          個性の違う4人の彼女と出会う、大人の恋愛AVG。
+        </p>
+        <div class="title-buttons">
+          <button class="btn primary" data-action="new-game">はじめから</button>
+          <button class="btn"         data-action="to-gallery">キャラクター紹介</button>
+          <button class="btn ghost"   data-action="reset-progress">進行データを消去</button>
+        </div>
+        <p class="title-footer">Campus Heart © SpringRoute — 試読版</p>
+      </div>
+    </section>
+
+    <!-- プロローグ（名前入力） -->
+    <section id="prologue" class="screen">
+      <div class="prologue-wrap">
+        <div class="prologue-eyebrow">PROLOGUE</div>
+        <h2 class="prologue-title">あなたの名前を教えてください</h2>
+        <p class="prologue-hint">彼女たちに呼んでもらう、あなたの名前です。全角/半角12文字まで。</p>
+        <input id="player-name" type="text" maxlength="12" placeholder="例） 拓海" autocomplete="off" />
+        <div class="prologue-actions">
+          <button class="btn ghost" data-action="to-title">戻る</button>
+          <button class="btn primary" data-action="confirm-name">物語をはじめる</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ヒロイン選択 -->
+    <section id="gallery" class="screen">
+      <header class="bar">
+        <button class="btn ghost" data-action="to-title">← タイトルへ</button>
+        <h2>誰と恋をしますか？</h2>
+        <span class="gallery-name" id="gallery-name"></span>
+      </header>
+      <div class="char-grid">
+        <button class="char-card h-misaki" data-action="route" data-route="misaki">
+          <span class="char-tag">ギャル系</span>
+          <div class="char-body">
+            <div class="char-name">星野 美咲<span class="char-age">20 / 経営学部2年</span></div>
+            <p class="char-catch">「うち、ちゃんと見てくれる人、好きだよ」</p>
+            <p class="char-desc">派手で明るい。SNS映えとノリを愛するが、本当は真面目で一途。</p>
+          </div>
+        </button>
+        <button class="char-card h-shiori" data-action="route" data-route="shiori">
+          <span class="char-tag">才女・お嬢様</span>
+          <div class="char-body">
+            <div class="char-name">白石 詩織<span class="char-age">21 / 文学部3年</span></div>
+            <p class="char-catch">「……弱いところ、見せてもいいですか」</p>
+            <p class="char-desc">読書家で真面目。家業を背負う重圧と、誰にも言えない一人の時間。</p>
+          </div>
+        </button>
+        <button class="char-card h-reina" data-action="route" data-route="reina">
+          <span class="char-tag">クール系 先輩</span>
+          <div class="char-body">
+            <div class="char-name">黒川 玲奈<span class="char-age">22 / 法学部4年</span></div>
+            <p class="char-catch">「今夜だけ、先輩扱いしないで」</p>
+            <p class="char-desc">物静かで観察眼が鋭い。口数は少ないが、選んだ相手にだけ甘くなる。</p>
+          </div>
+        </button>
+        <button class="char-card h-hikari" data-action="route" data-route="hikari">
+          <span class="char-tag">元気系 後輩</span>
+          <div class="char-body">
+            <div class="char-name">藤村 ひかり<span class="char-age">19 / 教育学部1年</span></div>
+            <p class="char-catch">「せんぱい、隣、ひかりの場所にしていい？」</p>
+            <p class="char-desc">人懐っこく音楽が大好き。満面の笑みの奥に、地元で抱えた痛みをそっと隠す。</p>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- 本編シーン -->
+    <section id="scene" class="screen">
+      <div class="scene-hud">
+        <div class="hud-left">
+          <button class="btn ghost tiny" data-action="to-title">▤ タイトル</button>
+        </div>
+        <div class="hud-right">
+          <button class="btn ghost tiny" id="btn-log"  data-action="log">LOG</button>
+          <button class="btn ghost tiny" id="btn-auto" data-action="auto">AUTO</button>
+          <button class="btn ghost tiny" id="btn-skip" data-action="skip">SKIP</button>
+          <span class="hud-heart" id="hud-heart"></span>
+        </div>
+      </div>
+      <div class="scene-box">
+        <div class="speaker" id="speaker"></div>
+        <div class="line" id="line"></div>
+        <div class="choices" id="choices"></div>
+        <div class="next-hint" id="next-hint">▼ クリックで進む</div>
+      </div>
+    </section>
+
+    <!-- エンディング -->
+    <section id="ending" class="screen">
+      <div class="ending-wrap" id="ending-wrap"></div>
+    </section>
+
+    <!-- バックログ モーダル -->
+    <div class="modal hidden" id="modal-log">
+      <div class="modal-card wide">
+        <div class="modal-head">
+          <h3>バックログ</h3>
+          <button class="btn ghost tiny" data-action="close-log">× 閉じる</button>
+        </div>
+        <div class="log-scroll" id="log-body"></div>
+      </div>
+    </div>
+
+    <!-- 通知トースト -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script src="js/engine.js"></script>
+  <script src="js/scenarios/common.js"></script>
+  <script src="js/scenarios/misaki.js"></script>
+  <script src="js/scenarios/shiori.js"></script>
+  <script src="js/scenarios/reina.js"></script>
+  <script src="js/scenarios/hikari.js"></script>
+</body>
+</html>
