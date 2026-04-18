@@ -1,0 +1,54 @@
+:root{
+  /* ベースカラー（ダーク・大人向け） */
+  --bg:        #0e0b12;
+  --bg-soft:   #17121c;
+  --ink:       #f5ecec;
+  --sub:       #b9a9b5;
+
+  /* アクセント */
+  --accent:    #ff6aa2;   /* 恋愛ピンク */
+  --accent-2:  #ffb86b;   /* 夕焼けオレンジ */
+
+  /* UIパーツ */
+  --line:      rgba(255,255,255,.08);
+  --card:      rgba(255,255,255,.04);
+
+  /* ヒロイン別テーマカラー */
+  --h-misaki:  #ff7fb6;   /* ギャル：ピンク */
+  --h-shiori:  #d9c7a7;   /* お嬢様：ベージュ */
+  --h-reina:   #b09ac8;   /* クール：モーヴ */
+  --h-hikari:  #6fb7ff;   /* 元気：スカイ */
+
+  /* タイポ */
+  --font-jp: "Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-jp);
+  min-height:100vh;
+}
+
+body{
+  background:
+    radial-gradient(1000px 600px at 20% -10%,  rgba(255,106,162,.18), transparent 60%),
+    radial-gradient(800px  500px at 120% 120%, rgba(111,183,255,.10), transparent 60%),
+    linear-gradient(180deg,#0d0a11 0%, #110d16 60%, #0b0910 100%);
+  overflow-x:hidden;
+}
+
+#app{
+  max-width:1100px;
+  margin:0 auto;
+  min-height:100vh;
+  position:relative;
+}
+
+/* 画面切り替え */
+.screen{ display:none; min-height:100vh; padding:32px 24px 80px; }
+.screen.active{ display:block; }
