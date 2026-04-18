@@ -1,75 +1,97 @@
 /* ============================================================
- * シーン管理エンジン（テキスト＋選択肢、画像なし）
+ * Campus Heart — シーン管理エンジン（完成版）
  *
- * シーンデータの形式:
+ * シーンデータ形式:
  *   {
- *     id: "s1",
- *     lines: [
- *       { who: "ナレーション", text: "..." },
- *       { who: "美咲",       text: "..." }
- *     ],
- *     prompt: "……どうする？",       // 選択肢表示時の見出し
- *     choices: [
- *       { label: "声をかける", points:{misaki:3}, next: "s2" },
- *       { label: "無視する",   points:{misaki:1}, next: "s3" },
- *     ],
- *     // 静的な次シーン
- *     next: "s2",
- *     // もしくは動的分岐（好感度で枝分かれ）
- *     branch: (state) => state.affection.misaki >= 6
- *                        ? "misaki_end_good" : "misaki_end_normal",
+ *     id:   "misaki_s1",
+ *     lines:[ { who, text }, ... ],
+ *     prompt: "……どうする？",
+ *     choices:[ { label, points:{misaki:3}, next:"..." }, ... ],
+ *     next:   "misaki_s2",
+ *     branch: (state) => "次シーンID",
+ *
+ *     // エンディング専用
+ *     endType: "good" | "normal",
+ *     route:   "misaki",
+ *     title:   "届いた春",
+ *     epilogue:"……まとめの一文。",
  *   }
  * ============================================================ */
 
 const Engine = (() => {
   const HEROINES = ['misaki', 'shiori', 'reina', 'hikari'];
-  const NAMES = { misaki:'美咲', shiori:'詩織', reina:'玲奈', hikari:'ひかり' };
+  const NAMES    = { misaki:'美咲', shiori:'詩織', reina:'玲奈', hikari:'ひかり' };
+  const FULLNAMES= { misaki:'星野 美咲', shiori:'白石 詩織', reina:'黒川 玲奈', hikari:'藤村 ひかり' };
+  const NAME_TO_KEY = { '美咲':'misaki', '詩織':'shiori', '玲奈':'reina', 'ひかり':'hikari' };
+  const STORE_KEY = 'campus_heart_progress_v1';
 
-  // ---------- 画面切り替え ----------
+  // ---------- 画面切替 ----------
   function showScreen(id){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
     if (el) el.classList.add('active');
+    if (id === 'gallery') refreshGallery();
   }
 
-  // ---------- 全体ステート ----------
+  // ---------- ステート ----------
   const state = {
-    scenes: {},                                   // id -> scene
-    current: null,                                // 現在のシーン
-    index: 0,                                     // 行インデックス
-    affection: { misaki:0, shiori:0, reina:0, hikari:0 }, // 好感度
-    currentRoute: null,                           // 'misaki' | 'shiori' | ...
+    scenes: {},
+    current: null,
+    index: 0,
+    affection: { misaki:0, shiori:0, reina:0, hikari:0 },
+    currentRoute: null,
   };
 
-  function loadScenes(sceneMap){ state.scenes = sceneMap || {}; }
-  function addScenes(sceneMap){ Object.assign(state.scenes, sceneMap || {}); }
-  function getAffection(key){ return state.affection[key] || 0; }
+  function loadScenes(m){ state.scenes = m || {}; }
+  function addScenes(m){ Object.assign(state.scenes, m || {}); }
+  function getAffection(k){ return state.affection[k] || 0; }
 
-  // ヒロインルート単位でリセットして第一シーンから
-  function playRoute(heroineKey){
-    if (!HEROINES.includes(heroineKey)) return;
-    state.affection[heroineKey] = 0;
-    state.currentRoute = heroineKey;
-    playScene(`${heroineKey}_s1`);
+  // ---------- 進行度（localStorage） ----------
+  function loadProgress(){
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function saveCompletion(route, endType){
+    if (!route || !endType) return;
+    try {
+      const d = loadProgress();
+      d[route] = d[route] || {};
+      d[route][endType] = true;
+      localStorage.setItem(STORE_KEY, JSON.stringify(d));
+    } catch {}
   }
 
-  // タイトルに戻る（進行中ルートはリセットしない：気が変わった時の保険）
-  function toTitle(){ showScreen('title'); }
+  // ---------- ルート ----------
+  function playRoute(key){
+    if (!HEROINES.includes(key)) return;
+    state.affection[key] = 0;
+    state.currentRoute = key;
+    applyTheme(key);
+    // intro があれば先に。なければ _s1
+    const introId = `${key}_intro`;
+    playScene(state.scenes[introId] ? introId : `${key}_s1`);
+  }
 
+  function applyTheme(key){
+    document.body.dataset.route = key || '';
+  }
+
+  // ---------- シーン再生 ----------
   function playScene(id){
     const scene = state.scenes[id];
     if (!scene){
       console.warn(`[Engine] scene not found: ${id}`);
       return;
     }
-    // id のプレフィクスでルート判定
     const prefix = id.split('_')[0];
-    if (HEROINES.includes(prefix)) state.currentRoute = prefix;
+    if (HEROINES.includes(prefix)){
+      state.currentRoute = prefix;
+      applyTheme(prefix);
+    }
 
     state.current = scene;
     state.index = 0;
 
-    // 遷移時に scene の直進ハンドラは必ず解除
     const sceneEl = document.getElementById('scene');
     if (sceneEl) sceneEl.onclick = null;
 
@@ -97,9 +119,20 @@ const Engine = (() => {
       return;
     }
 
-    speakerEl.textContent = line.who || '';
-    speakerEl.className = 'speaker ' + (line.who === 'ナレーション' ? 'narration' : '');
+    const who = line.who || '';
+    const speakerKey = NAME_TO_KEY[who];
+    speakerEl.textContent = who;
+    speakerEl.className = 'speaker'
+      + (who === 'ナレーション' ? ' narration' : '')
+      + (speakerKey ? ` h-${speakerKey}` : '');
+
+    // フェード再生のため一度classを外してから付け直す
     lineEl.textContent = line.text || '';
+    lineEl.classList.remove('anim-in');
+    // reflow を挟んで再アニメーション
+    void lineEl.offsetWidth;
+    lineEl.classList.add('anim-in');
+
     hintEl.style.display = '';
     hintEl.textContent = '▼ クリック／スペースで進む';
   }
@@ -107,17 +140,23 @@ const Engine = (() => {
   function advance(){
     if (!state.current) return;
     const choicesEl = document.getElementById('choices');
-    if (choicesEl.style.display === 'flex') return;  // 選択肢表示中はスキップ
+    if (choicesEl.style.display === 'flex') return;
     state.index += 1;
     renderLine();
   }
 
-  // ---------- シーン末尾の処理 ----------
+  // ---------- シーン末尾 ----------
   function showEndOfScene(){
     const scene = state.current;
     const choicesEl = document.getElementById('choices');
     const hintEl    = document.getElementById('next-hint');
     const lineEl    = document.getElementById('line');
+
+    // エンディング：専用画面へ
+    if (scene.endType){
+      showEndingScreen(scene);
+      return;
+    }
 
     if (scene.choices && scene.choices.length){
       lineEl.textContent = scene.prompt || '…どうする？';
@@ -135,17 +174,11 @@ const Engine = (() => {
       return;
     }
 
-    // 動的分岐
     if (typeof scene.branch === 'function'){
       const nextId = scene.branch(state);
-      if (nextId){
-        // 一瞬だけ「…」的な間合いを挟まず、即遷移
-        playScene(nextId);
-        return;
-      }
+      if (nextId){ playScene(nextId); return; }
     }
 
-    // 静的next
     if (scene.next){
       hintEl.textContent = '▼ クリックで次へ';
       const sceneEl = document.getElementById('scene');
@@ -160,7 +193,6 @@ const Engine = (() => {
   }
 
   function onChoose(choice){
-    // 好感度ポイント反映
     if (choice.points){
       for (const [k, v] of Object.entries(choice.points)){
         state.affection[k] = (state.affection[k] || 0) + v;
@@ -169,7 +201,6 @@ const Engine = (() => {
     }
     if (typeof choice.onPick === 'function') choice.onPick();
 
-    // 次シーン決定：choice.next > scene.branch > scene.next
     const scene = state.current;
     let nextId = choice.next;
     if (!nextId && typeof scene.branch === 'function'){
@@ -184,23 +215,72 @@ const Engine = (() => {
     const el = document.getElementById('hud-heart');
     if (!el) return;
     const r = state.currentRoute;
-    if (!r){ el.classList.remove('on'); el.textContent = ''; return; }
+    if (!r){ el.classList.remove('on'); el.textContent=''; return; }
     el.className = `hud-heart on theme-${r}`;
     el.textContent = `♥ ${NAMES[r] || r}  ${state.affection[r] || 0}`;
   }
 
+  // ---------- エンディング画面 ----------
+  function showEndingScreen(scene){
+    const route   = scene.route || state.currentRoute;
+    const score   = state.affection[route] || 0;
+    const isGood  = scene.endType === 'good';
+    const label   = isGood ? 'TRUE  ENDING' : 'NORMAL  ENDING';
+    const heroine = FULLNAMES[route] || '';
+    const title   = scene.title || (isGood ? '届いた想い' : 'やさしい距離');
+    const epi     = scene.epilogue || '';
+
+    saveCompletion(route, scene.endType);
+
+    const wrap = document.getElementById('ending-wrap');
+    wrap.className = `ending-wrap theme-${route} ${isGood ? 'is-good' : 'is-normal'}`;
+    wrap.innerHTML = `
+      <div class="ending-banner">
+        <div class="ending-label">${label}</div>
+        <div class="ending-heroine">${heroine}</div>
+        <h2 class="ending-title">「${title}」</h2>
+        <div class="ending-score">♥ ${score} / 9</div>
+      </div>
+      <div class="ending-body">
+        <p class="ending-text">${epi.replace(/\n/g,'<br>')}</p>
+        <div class="ending-actions">
+          <button class="btn primary" data-action="route" data-route="${route}">もう一度このヒロインへ</button>
+          <button class="btn" data-action="to-gallery">別のヒロインを選ぶ</button>
+          <button class="btn ghost" data-action="to-title">タイトルへ戻る</button>
+        </div>
+      </div>
+    `;
+    showScreen('ending');
+    applyTheme(route);
+  }
+
+  // ---------- ギャラリーの達成マーク更新 ----------
+  function refreshGallery(){
+    const p = loadProgress();
+    document.querySelectorAll('.char-card').forEach(card => {
+      const r = card.dataset.route;
+      card.querySelector('.char-progress')?.remove();
+      const pr = p[r];
+      if (!pr) return;
+      const tag = document.createElement('div');
+      tag.className = 'char-progress';
+      tag.innerHTML =
+        (pr.good   ? '<span class="mark good">♥ TRUE</span>' : '') +
+        (pr.normal ? '<span class="mark normal">NORMAL</span>' : '');
+      card.appendChild(tag);
+    });
+  }
+
   // ---------- イベント配線 ----------
   document.addEventListener('DOMContentLoaded', () => {
-    // シーンクリックで行送り
     const sceneEl = document.getElementById('scene');
     sceneEl.addEventListener('click', (e) => {
-      if (e.target.closest('.choice')) return;       // 選択肢は個別ハンドラ
-      if (e.target.closest('[data-action]')) return; // HUDボタン優先
-      if (sceneEl.onclick) return;                   // 直進ハンドラ優先
+      if (e.target.closest('.choice')) return;
+      if (e.target.closest('[data-action]')) return;
+      if (sceneEl.onclick) return;
       advance();
     });
 
-    // キーボードでも進行
     document.addEventListener('keydown', (e) => {
       if (!document.getElementById('scene').classList.contains('active')) return;
       if (e.code === 'Space' || e.code === 'Enter'){
@@ -209,32 +289,29 @@ const Engine = (() => {
       }
     });
 
-    // data-action による画面/ルート遷移（全画面共通）
     document.addEventListener('click', (e) => {
-      const target = e.target.closest('[data-action]');
-      if (!target) return;
-      const act = target.dataset.action;
-      if (act === 'to-title')   { e.preventDefault(); showScreen('title'); }
-      else if (act === 'to-gallery'){ e.preventDefault(); showScreen('gallery'); }
-      else if (act === 'route') { e.preventDefault(); playRoute(target.dataset.route); }
+      const t = e.target.closest('[data-action]');
+      if (!t) return;
+      const act = t.dataset.action;
+      if (act === 'to-title')        { e.preventDefault(); applyTheme(null); showScreen('title'); }
+      else if (act === 'to-gallery') { e.preventDefault(); applyTheme(null); showScreen('gallery'); }
+      else if (act === 'route')      { e.preventDefault(); playRoute(t.dataset.route); }
     });
   });
 
   return {
     showScreen, loadScenes, addScenes, playScene, advance,
-    playRoute, toTitle, getAffection,
+    playRoute, getAffection, loadProgress, refreshGallery,
   };
 })();
 
 
 /* ============================================================
- * 起動：URLハッシュがあればその位置から、なければタイトル画面
- *   例) index.html#shiori_s1
+ * 起動：URLハッシュがあればそこから、なければタイトル画面
  * ============================================================ */
 window.addEventListener('load', () => {
   const hash = location.hash.replace('#', '');
-  if (hash && Engine.playScene){
-    // ハッシュで直接シーンを指定された場合はそこから（デバッグ/試読用）
+  if (hash){
     Engine.playScene(hash);
   } else {
     Engine.showScreen('title');

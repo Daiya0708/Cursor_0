@@ -219,9 +219,152 @@ body{
   font-size:15px;
   line-height:1.6;
   transition:background .15s ease, transform .1s ease, border-color .15s ease;
+  animation: choiceIn .35s ease both;
 }
+.choice:nth-child(2){ animation-delay:.07s; }
+.choice:nth-child(3){ animation-delay:.14s; }
 .choice:hover{
   background:rgba(255,106,162,.12);
   border-color:rgba(255,106,162,.5);
 }
 .choice:active{ transform:translateY(1px); }
+
+@keyframes choiceIn{
+  from{ opacity:0; transform:translateY(8px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* テキスト1行フェード */
+.line.anim-in{ animation: lineIn .38s ease both; }
+@keyframes lineIn{
+  from{ opacity:0; transform:translateY(4px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* 話者バッジのヒロイン別カラー */
+.speaker.h-misaki{
+  background:rgba(255,127,182,.16); color:#ffd7e9;
+  border:1px solid rgba(255,127,182,.35);
+}
+.speaker.h-shiori{
+  background:rgba(217,199,167,.16); color:#f3e5c7;
+  border:1px solid rgba(217,199,167,.35);
+}
+.speaker.h-reina{
+  background:rgba(176,154,200,.16); color:#e5daf4;
+  border:1px solid rgba(176,154,200,.35);
+}
+.speaker.h-hikari{
+  background:rgba(111,183,255,.16); color:#cfe5ff;
+  border:1px solid rgba(111,183,255,.35);
+}
+
+/* ===== ルート別の背景テーマ（body[data-route]） ===== */
+body[data-route="misaki"]{
+  background:
+    radial-gradient(1100px 700px at 20% -10%, rgba(255,106,162,.22), transparent 60%),
+    radial-gradient(900px 600px at 120% 120%, rgba(255,184,107,.10), transparent 60%),
+    linear-gradient(180deg,#140910 0%, #170a14 60%, #0d0710 100%);
+}
+body[data-route="shiori"]{
+  background:
+    radial-gradient(1100px 700px at 10% 0%, rgba(217,199,167,.16), transparent 60%),
+    radial-gradient(900px 600px at 120% 120%, rgba(255,184,107,.08), transparent 60%),
+    linear-gradient(180deg,#120e10 0%, #15110e 60%, #0b0a09 100%);
+}
+body[data-route="reina"]{
+  background:
+    radial-gradient(1100px 700px at 20% -10%, rgba(176,154,200,.20), transparent 60%),
+    radial-gradient(900px 600px at 120% 120%, rgba(90,70,140,.14), transparent 60%),
+    linear-gradient(180deg,#0d0b14 0%, #11101a 60%, #08070c 100%);
+}
+body[data-route="hikari"]{
+  background:
+    radial-gradient(1100px 700px at 20% -10%, rgba(111,183,255,.18), transparent 60%),
+    radial-gradient(900px 600px at 120% 120%, rgba(255,106,162,.08), transparent 60%),
+    linear-gradient(180deg,#0a0e14 0%, #0d1220 60%, #070a10 100%);
+}
+
+/* ===== ギャラリー達成マーク ===== */
+.char-card{ position:relative; }
+.char-progress{
+  position:absolute; top:12px; right:12px;
+  display:flex; gap:4px; z-index:2;
+}
+.char-progress .mark{
+  font-size:10px; letter-spacing:.15em; padding:3px 8px; border-radius:999px;
+  background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.12);
+}
+.char-progress .mark.good{
+  background:linear-gradient(135deg,#ff6aa2,#ffb86b);
+  color:#1c0a13; font-weight:800; border-color:transparent;
+}
+.char-progress .mark.normal{
+  color:#d8cbd1;
+}
+
+/* ===== エンディング画面 ===== */
+#ending.active{
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:40px 24px;
+}
+.ending-wrap{
+  max-width:740px; width:100%;
+  background:var(--card); border:1px solid var(--line);
+  border-radius:22px; overflow:hidden;
+  box-shadow:0 30px 60px rgba(0,0,0,.45);
+  animation: fadeUp .55s ease both;
+}
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:none; }
+}
+.ending-banner{
+  padding:40px 32px 30px;
+  position:relative;
+  background:linear-gradient(135deg, rgba(255,106,162,.18) 0%, rgba(255,184,107,.10) 100%);
+  border-bottom:1px solid var(--line);
+  text-align:center;
+}
+.ending-wrap.theme-misaki .ending-banner{ background:linear-gradient(135deg, rgba(255,127,182,.22), rgba(255,184,107,.10)); }
+.ending-wrap.theme-shiori .ending-banner{ background:linear-gradient(135deg, rgba(217,199,167,.22), rgba(255,255,255,.05)); }
+.ending-wrap.theme-reina  .ending-banner{ background:linear-gradient(135deg, rgba(176,154,200,.22), rgba(90,70,140,.10)); }
+.ending-wrap.theme-hikari .ending-banner{ background:linear-gradient(135deg, rgba(111,183,255,.22), rgba(255,106,162,.08)); }
+
+.ending-label{
+  color:#ffe1ea; font-size:11px; letter-spacing:.45em; margin-bottom:8px;
+}
+.ending-wrap.is-normal .ending-label{ color:#d6c8ce; }
+.ending-heroine{
+  color:var(--sub); font-size:12px; letter-spacing:.2em; margin-bottom:10px;
+}
+.ending-title{
+  font-size:clamp(22px,4vw,30px); font-weight:800; margin:0 0 14px;
+  letter-spacing:.06em;
+}
+.ending-score{
+  display:inline-block; padding:6px 14px; border-radius:999px;
+  background:rgba(0,0,0,.35); border:1px solid rgba(255,106,162,.35);
+  color:#ffd5e4; font-size:12px; letter-spacing:.15em;
+}
+.ending-body{ padding:28px 32px 34px; }
+.ending-text{
+  line-height:2; color:#e4d7db; font-size:15px; margin:0 0 22px;
+}
+.ending-actions{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:640px){
+  .title-ja{ font-size:44px; }
+  .title-copy{ font-size:14px; }
+  .char-grid{ grid-template-columns:1fr; gap:12px; }
+  .char-card{ padding:16px; }
+  .scene-box{ padding:20px 20px 24px; }
+  .line{ font-size:16px; line-height:1.9; }
+  .ending-banner{ padding:32px 22px 24px; }
+  .ending-body{ padding:22px 22px 28px; }
+  .ending-actions{ justify-content:stretch; }
+  .ending-actions .btn{ flex:1 1 auto; }
+}
