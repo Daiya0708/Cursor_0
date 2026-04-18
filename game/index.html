@@ -9,16 +9,75 @@
 <body>
   <div id="app">
     <!-- タイトル画面 -->
-    <section id="title" class="screen"></section>
+    <section id="title" class="screen active">
+      <div class="title-wrap">
+        <div class="title-brand">CAMPUS♡HEART</div>
+        <h1 class="title-ja">キャンパスハート</h1>
+        <p class="title-sub">— 4つの春、ひとつの答え —</p>
+        <p class="title-copy">
+          春、東都大学。<br>
+          個性の違う4人の彼女と出会う、大人の恋愛AVG。
+        </p>
+        <div class="title-buttons">
+          <button class="btn primary" data-action="to-gallery">はじめから</button>
+          <button class="btn ghost"   data-action="to-gallery">キャラクター紹介</button>
+        </div>
+        <p class="title-footer">Campus Heart © SpringRoute — 試読版</p>
+      </div>
+    </section>
 
-    <!-- キャラ紹介 -->
-    <section id="gallery" class="screen"></section>
+    <!-- ヒロイン選択 -->
+    <section id="gallery" class="screen">
+      <header class="bar">
+        <button class="btn ghost" data-action="to-title">← タイトルへ</button>
+        <h2>誰と恋をしますか？</h2>
+        <span></span>
+      </header>
+      <div class="char-grid">
+        <button class="char-card h-misaki" data-action="route" data-route="misaki">
+          <span class="char-tag">ギャル系</span>
+          <div class="char-body">
+            <div class="char-name">星野 美咲<span class="char-age">20 / 経営学部2年</span></div>
+            <p class="char-catch">「うち、ちゃんと見てくれる人、好きだよ」</p>
+            <p class="char-desc">派手で明るい。SNS映えとノリを愛するが、本当は真面目で一途。</p>
+          </div>
+        </button>
+        <button class="char-card h-shiori" data-action="route" data-route="shiori">
+          <span class="char-tag">才女・お嬢様</span>
+          <div class="char-body">
+            <div class="char-name">白石 詩織<span class="char-age">21 / 文学部3年</span></div>
+            <p class="char-catch">「……弱いところ、見せてもいいですか」</p>
+            <p class="char-desc">読書家で真面目。家業を背負う重圧と、誰にも言えない一人の時間。</p>
+          </div>
+        </button>
+        <button class="char-card h-reina" data-action="route" data-route="reina">
+          <span class="char-tag">クール系 先輩</span>
+          <div class="char-body">
+            <div class="char-name">黒川 玲奈<span class="char-age">22 / 法学部4年</span></div>
+            <p class="char-catch">「今夜だけ、先輩扱いしないで」</p>
+            <p class="char-desc">物静かで観察眼が鋭い。口数は少ないが、選んだ相手にだけ甘くなる。</p>
+          </div>
+        </button>
+        <button class="char-card h-hikari" data-action="route" data-route="hikari">
+          <span class="char-tag">元気系 後輩</span>
+          <div class="char-body">
+            <div class="char-name">藤村 ひかり<span class="char-age">19 / 教育学部1年</span></div>
+            <p class="char-catch">「せんぱい、隣、ひかりの場所にしていい？」</p>
+            <p class="char-desc">人懐っこく音楽が大好き。満面の笑みの奥に、地元で抱えた痛みをそっと隠す。</p>
+          </div>
+        </button>
+      </div>
+    </section>
 
     <!-- 名前入力 / プロローグ -->
     <section id="prologue" class="screen"></section>
 
     <!-- 本編シーン（立ち絵・テキスト・選択肢） -->
     <section id="scene" class="screen">
+      <div class="scene-hud">
+        <button class="btn ghost tiny" data-action="to-title">▤ タイトル</button>
+        <span class="hud-heart" id="hud-heart"></span>
+      </div>
       <div class="scene-box">
         <div class="speaker" id="speaker"></div>
         <div class="line" id="line"></div>

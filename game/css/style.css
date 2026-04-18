@@ -53,12 +53,114 @@ body{
 .screen{ display:none; min-height:100vh; padding:32px 24px 80px; }
 .screen.active{ display:block; }
 
+/* ===== 共通ボタン ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  padding:10px 18px;border-radius:999px;cursor:pointer;font:inherit;font-size:14px;
+  letter-spacing:.04em;transition:transform .1s ease, background .2s ease, border-color .2s ease;
+  backdrop-filter: blur(6px);
+}
+.btn:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); }
+.btn:active{ transform:translateY(1px); }
+.btn.primary{
+  background:linear-gradient(135deg,var(--accent) 0%, #ff8c5a 100%);
+  border-color:transparent;color:#1c0a13;font-weight:700;
+  box-shadow:0 8px 20px rgba(255,106,162,.28), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn.ghost{ background:transparent; }
+.btn.tiny{ padding:6px 12px; font-size:12px; }
+.bar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; gap:12px; }
+.bar h2{ margin:0; font-weight:600; letter-spacing:.1em; }
+
+/* ===== タイトル画面 ===== */
+#title.active{
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:60px 24px;
+}
+.title-wrap{ text-align:center; max-width:600px; }
+.title-brand{
+  font-size:12px; letter-spacing:.5em; color:var(--accent);
+  margin-bottom:14px; opacity:.9;
+}
+.title-ja{
+  font-size:clamp(44px,8vw,84px); font-weight:900; letter-spacing:.08em; margin:0 0 10px;
+  background:linear-gradient(135deg,#ffd1e4 0%,#ffc58a 50%,#ffe7c5 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(255,130,170,.25);
+}
+.title-sub{ color:var(--sub); letter-spacing:.2em; font-size:13px; margin:0 0 26px; }
+.title-copy{ color:#eedfe0; line-height:2; font-size:15px; opacity:.9; margin:0 0 36px; }
+.title-buttons{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+.title-footer{ color:#6a5d65; font-size:11px; letter-spacing:.1em; margin-top:44px; }
+
+/* ===== ヒロイン選択 ===== */
+.char-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;
+}
+.char-card{
+  background:var(--card); border:1px solid var(--line); border-radius:18px;
+  padding:20px; color:var(--ink); text-align:left; cursor:pointer; font:inherit;
+  transition:transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  position:relative; overflow:hidden;
+}
+.char-card::before{
+  content:""; position:absolute; inset:0; opacity:.18; pointer-events:none;
+  background:radial-gradient(120% 80% at 0% 0%, var(--accent-col, var(--accent)) 0%, transparent 60%);
+}
+.char-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent-col);
+  background:rgba(255,255,255,.06);
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+.char-card .char-tag{
+  display:inline-block; font-size:11px; letter-spacing:.15em;
+  padding:4px 10px; border-radius:999px; margin-bottom:12px;
+  background:var(--accent-col); color:#1c0a13; font-weight:700;
+}
+.char-card .char-body{ position:relative; z-index:1; }
+.char-card .char-name{
+  font-size:20px; font-weight:800; margin:0 0 4px; letter-spacing:.04em;
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+}
+.char-card .char-age{ font-size:12px; color:var(--sub); font-weight:400; letter-spacing:.05em; }
+.char-card .char-catch{
+  margin:4px 0 10px; font-size:13px; color:#ffd5e4; font-style:italic;
+}
+.char-card .char-desc{
+  margin:0; font-size:13px; line-height:1.8; color:#d9cdd2;
+}
+.char-card.h-misaki{ --accent-col: var(--h-misaki); }
+.char-card.h-shiori{ --accent-col: var(--h-shiori); }
+.char-card.h-reina { --accent-col: var(--h-reina);  }
+.char-card.h-hikari{ --accent-col: var(--h-hikari); }
+
 /* ===== シーン画面（テキスト＋選択肢） ===== */
 #scene.active{
   display:flex;
-  align-items:flex-end;
+  flex-direction:column;
+  justify-content:flex-end;
   padding:0;
+  min-height:100vh;
 }
+.scene-hud{
+  position:fixed; top:14px; left:0; right:0;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 16px; z-index:5; pointer-events:none;
+  max-width:1100px; margin:0 auto;
+}
+.scene-hud > *{ pointer-events:auto; }
+.hud-heart{
+  display:none; padding:6px 12px; border-radius:999px;
+  background:rgba(0,0,0,.5); color:#ffd5e4; font-size:12px; letter-spacing:.08em;
+  border:1px solid rgba(255,106,162,.35); backdrop-filter:blur(8px);
+}
+.hud-heart.on{ display:inline-flex; gap:6px; align-items:center; }
+.hud-heart.theme-misaki{ color:#ffd5e4; border-color:rgba(255,127,182,.45); }
+.hud-heart.theme-shiori{ color:#f3e5c7; border-color:rgba(217,199,167,.45); }
+.hud-heart.theme-reina { color:#e5daf4; border-color:rgba(176,154,200,.45); }
+.hud-heart.theme-hikari{ color:#cfe5ff; border-color:rgba(111,183,255,.45); }
 .scene-box{
   width:100%;
   min-height:220px;

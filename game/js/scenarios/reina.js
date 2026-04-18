@@ -17,8 +17,8 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「……いいんですか、先輩」と素直に受ける", next: "reina_s1_good" },
-      { label: "「大丈夫です、走って帰りますよ」と遠慮する", next: "reina_s1_neutral" },
+      { label: "「……いいんですか、先輩」と素直に受ける",   points:{ reina:3 }, next: "reina_s1_good" },
+      { label: "「大丈夫です、走って帰りますよ」と遠慮する", points:{ reina:1 }, next: "reina_s1_neutral" },
     ],
   },
   reina_s1_good: {
@@ -50,8 +50,8 @@ Engine.addScenes({
     ],
     prompt: "どう返す？",
     choices: [
-      { label: "「先輩こそ、その本、授業のじゃないですよね」と踏み込む", next: "reina_s2_good" },
-      { label: "「じゃ、ごちそうになります」と軽く受ける",             next: "reina_s2_neutral" },
+      { label: "「先輩こそ、その本、授業のじゃないですよね」と踏み込む", points:{ reina:3 }, next: "reina_s2_good" },
+      { label: "「じゃ、ごちそうになります」と軽く受ける",             points:{ reina:1 }, next: "reina_s2_neutral" },
     ],
   },
   reina_s2_good: {
@@ -83,9 +83,10 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「……聞かせて、先輩」と静かに受け止める",       next: "reina_end_good" },
-      { label: "「決めたなら、背中は押します」とあえて距離を保つ", next: "reina_end_normal" },
+      { label: "「……聞かせて、先輩」と静かに受け止める",       points:{ reina:3 } },
+      { label: "「決めたなら、背中は押します」とあえて距離を保つ", points:{ reina:1 } },
     ],
+    branch: (st) => (st.affection.reina >= 6 ? "reina_end_good" : "reina_end_normal"),
   },
   reina_end_good: {
     id: "reina_end_good",

@@ -17,8 +17,8 @@ Engine.addScenes({
     ],
     prompt: "どう返す？",
     choices: [
-      { label: "「軽音なら、真面目にやってる先輩を紹介できるよ」と応える", next: "hikari_s1_good" },
-      { label: "「まずは学部で友達作った方がいいと思うよ」と助言する",     next: "hikari_s1_neutral" },
+      { label: "「軽音なら、真面目にやってる先輩を紹介できるよ」と応える", points:{ hikari:3 }, next: "hikari_s1_good" },
+      { label: "「まずは学部で友達作った方がいいと思うよ」と助言する",     points:{ hikari:1 }, next: "hikari_s1_neutral" },
     ],
   },
   hikari_s1_good: {
@@ -51,8 +51,8 @@ Engine.addScenes({
     ],
     prompt: "どう返す？",
     choices: [
-      { label: "「気づいてたよ。泣き顔、悪くなかった」と素直に言う",   next: "hikari_s2_good" },
-      { label: "「気づいたけど、わざと見ないふりしてた」と打ち明ける", next: "hikari_s2_neutral" },
+      { label: "「気づいてたよ。泣き顔、悪くなかった」と素直に言う",   points:{ hikari:3 }, next: "hikari_s2_good" },
+      { label: "「気づいたけど、わざと見ないふりしてた」と打ち明ける", points:{ hikari:1 }, next: "hikari_s2_neutral" },
     ],
   },
   hikari_s2_good: {
@@ -85,9 +85,10 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「逃げたんじゃなくて、自分で選んだんだよ」と言う",   next: "hikari_end_good" },
-      { label: "「ここに居ていい。それだけは、俺が保証する」と返す", next: "hikari_end_normal" },
+      { label: "「逃げたんじゃなくて、自分で選んだんだよ」と言う",   points:{ hikari:3 } },
+      { label: "「ここに居ていい。それだけは、俺が保証する」と返す", points:{ hikari:1 } },
     ],
+    branch: (st) => (st.affection.hikari >= 6 ? "hikari_end_good" : "hikari_end_normal"),
   },
   hikari_end_good: {
     id: "hikari_end_good",

@@ -17,8 +17,8 @@ Engine.addScenes({
     ],
     prompt: "どう関わる？",
     choices: [
-      { label: "「取りましょうか」と自然に声をかける",           next: "shiori_s1_good" },
-      { label: "「脚立、あっちの柱の影にありましたよ」と教える", next: "shiori_s1_neutral" },
+      { label: "「取りましょうか」と自然に声をかける",           points:{ shiori:3 }, next: "shiori_s1_good" },
+      { label: "「脚立、あっちの柱の影にありましたよ」と教える", points:{ shiori:1 }, next: "shiori_s1_neutral" },
     ],
   },
   shiori_s1_good: {
@@ -50,8 +50,8 @@ Engine.addScenes({
     ],
     prompt: "どう声をかける？",
     choices: [
-      { label: "「ありがとう。白石さんこそ、少し休んだら？」",       next: "shiori_s2_good" },
-      { label: "「完璧を目指すの、かっこいいですね」と距離を保つ", next: "shiori_s2_neutral" },
+      { label: "「ありがとう。白石さんこそ、少し休んだら？」",       points:{ shiori:3 }, next: "shiori_s2_good" },
+      { label: "「完璧を目指すの、かっこいいですね」と距離を保つ", points:{ shiori:1 }, next: "shiori_s2_neutral" },
     ],
   },
   shiori_s2_good: {
@@ -84,9 +84,10 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「弱さを見せてくれて、ありがとう」と静かに言う",   next: "shiori_end_good" },
-      { label: "「一緒にいるよ。何もしなくても、ここにいる」と返す", next: "shiori_end_normal" },
+      { label: "「弱さを見せてくれて、ありがとう」と静かに言う",   points:{ shiori:3 } },
+      { label: "「一緒にいるよ。何もしなくても、ここにいる」と返す", points:{ shiori:1 } },
     ],
+    branch: (st) => (st.affection.shiori >= 6 ? "shiori_end_good" : "shiori_end_normal"),
   },
   shiori_end_good: {
     id: "shiori_end_good",

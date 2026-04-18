@@ -17,8 +17,8 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「貸して。たぶん設定の問題だよ」と自然に受け取る", next: "misaki_s1_good" },
-      { label: "「忙しいから、他の人に聞いて」と距離をとる",       next: "misaki_s1_neutral" },
+      { label: "「貸して。たぶん設定の問題だよ」と自然に受け取る", points:{ misaki:3 }, next: "misaki_s1_good" },
+      { label: "「忙しいから、他の人に聞いて」と距離をとる",       points:{ misaki:1 }, next: "misaki_s1_neutral" },
     ],
   },
   misaki_s1_good: {
@@ -51,8 +51,8 @@ Engine.addScenes({
     ],
     prompt: "どう返す？",
     choices: [
-      { label: "「そっちも派手に見えて、中身は真面目でしょ」", next: "misaki_s2_good" },
-      { label: "「真面目なフリだけは得意だよ」と軽く流す",   next: "misaki_s2_neutral" },
+      { label: "「そっちも派手に見えて、中身は真面目でしょ」", points:{ misaki:3 }, next: "misaki_s2_good" },
+      { label: "「真面目なフリだけは得意だよ」と軽く流す",   points:{ misaki:1 }, next: "misaki_s2_neutral" },
     ],
   },
   misaki_s2_good: {
@@ -84,9 +84,11 @@ Engine.addScenes({
     ],
     prompt: "どう応える？",
     choices: [
-      { label: "「その顔、反則だよ」と素直に伝える",         next: "misaki_end_good" },
-      { label: "「疲れたなら、もう少しだけ付き合うよ」と返す", next: "misaki_end_normal" },
+      { label: "「その顔、反則だよ」と素直に伝える",         points:{ misaki:3 } },
+      { label: "「疲れたなら、もう少しだけ付き合うよ」と返す", points:{ misaki:1 } },
     ],
+    // ここで好感度の累計でエンディング分岐
+    branch: (st) => (st.affection.misaki >= 6 ? "misaki_end_good" : "misaki_end_normal"),
   },
   misaki_end_good: {
     id: "misaki_end_good",
