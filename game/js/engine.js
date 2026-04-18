@@ -135,7 +135,13 @@ const Engine = (() => {
     if (!scene){ console.warn(`[Engine] scene not found: ${id}`); return; }
 
     const prefix = id.split('_')[0];
-    if (HEROINES.includes(prefix)){ state.currentRoute = prefix; applyTheme(prefix); }
+    if (HEROINES.includes(prefix)){
+      state.currentRoute = prefix;
+      applyTheme(prefix);
+      setPortrait(prefix);  // シーン開始時にルートヒロインの立ち絵
+    } else {
+      clearPortrait();
+    }
 
     state.current = scene;
     state.index = 0;
@@ -146,6 +152,25 @@ const Engine = (() => {
     showScreen('scene');
     updateAffectionHud();
     renderLine();
+  }
+
+  // ---------- 立ち絵制御 ----------
+  function setPortrait(key){
+    const el = document.getElementById('scene-portrait');
+    if (!el) return;
+    el.dataset.key = key;
+    el.className = `scene-portrait show h-${key}`;
+  }
+  function clearPortrait(){
+    const el = document.getElementById('scene-portrait');
+    if (!el) return;
+    el.className = 'scene-portrait';
+    el.dataset.key = '';
+  }
+  function dimPortrait(on){
+    const el = document.getElementById('scene-portrait');
+    if (!el) return;
+    el.classList.toggle('dim', !!on);
   }
 
   // ---------- テキスト描画 ----------
@@ -172,6 +197,11 @@ const Engine = (() => {
     speakerEl.className = 'speaker'
       + (who === 'ナレーション' ? ' narration' : '')
       + (key ? ` h-${key}` : '');
+
+    // 立ち絵：ヒロインが喋ったらそのヒロインに切替、ナレーションは少し暗くして現状維持
+    if (key){ setPortrait(key); dimPortrait(false); }
+    else if (who === 'ナレーション'){ dimPortrait(true); }
+    else { dimPortrait(false); }
 
     lineEl.textContent = text;
     lineEl.classList.remove('anim-in');

@@ -136,6 +136,97 @@ body{
 .char-card.h-reina { --accent-col: var(--h-reina);  }
 .char-card.h-hikari{ --accent-col: var(--h-hikari); }
 
+/* ===== キャラカードのポートレート ===== */
+.char-portrait{
+  position:relative;
+  aspect-ratio: 16/10;
+  margin: -20px -20px 14px;      /* カードの内側padding相殺 */
+  border-radius: 18px 18px 0 0;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  /* 最下層：フォールバックのグラデ。画像が無い/読み込み失敗でも見える */
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%),
+    linear-gradient(135deg, var(--accent-col), rgba(0,0,0,.35));
+}
+.char-portrait::after{
+  /* 画像が無いときに見える "イニシャル"。画像が読み込めれば画像で覆われる */
+  content: attr(data-initial);
+  font-size: 64px; font-weight: 900; letter-spacing:.08em;
+  color: rgba(255,255,255,.8);
+  text-shadow: 0 2px 16px rgba(0,0,0,.5);
+}
+/* 画像が存在すればそれを最前面に敷く（無ければ silent fail して下のグラデが見える） */
+.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/misaki.jpg'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/shiori.jpg'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/reina.jpg'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/hikari.jpg'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+/* 画像が読み込まれたときはイニシャルを消す：画像の有無は JS でなく "画像が下の層にある時" という状態を CSS 変数で区切る。
+   ここでは常にイニシャルが薄く透けて見えても違和感ない設計にしてあるため、画像読み込み後もうっすら透ける想定。
+   キレイに消したい場合は .char-portrait::after { content: none; } を各クラスに付与する。 */
+.char-card .char-tag{ position:relative; z-index:1; margin-top:-6px; }
+
+/* ===== シーン立ち絵 ===== */
+.scene-stage{
+  position:fixed; inset:0; pointer-events:none;
+  z-index:0;
+}
+.scene-portrait{
+  position:absolute;
+  right: 4vw; bottom: 32vh;  /* テキストボックスの上に乗らない位置 */
+  width: min(38vw, 420px);
+  aspect-ratio: 3 / 4;
+  border-radius: 18px 18px 0 0;
+  background-size: cover;
+  background-position: center 12%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 24px 40px rgba(0,0,0,.55));
+  opacity: 0;
+  transform: translateY(18px) scale(.98);
+  transition: opacity .4s ease, transform .4s ease, filter .3s ease, background-image .2s ease;
+}
+.scene-portrait.show{ opacity: 1; transform: translateY(0) scale(1); }
+.scene-portrait.dim { filter: drop-shadow(0 24px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.9); }
+
+/* 背景：画像 + フォールバックグラデ（画像が無くても違和感ないよう色で立ち絵シルエット） */
+.scene-portrait.h-misaki{
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
+    url('assets/misaki.jpg'),
+    linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%);
+}
+.scene-portrait.h-shiori{
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
+    url('assets/shiori.jpg'),
+    linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%);
+}
+.scene-portrait.h-reina{
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
+    url('assets/reina.jpg'),
+    linear-gradient(160deg, var(--h-reina) 0%, #1d152e 100%);
+}
+.scene-portrait.h-hikari{
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
+    url('assets/hikari.jpg'),
+    linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%);
+}
+.scene-overlay{ display:none; }
+
+/* シーン本文はステージの上にくるよう z-index */
+#scene .scene-hud{ z-index: 5; }
+#scene .scene-box{ position:relative; z-index: 3; }
+
+/* モバイル：立ち絵を小さく & 少し下に */
+@media (max-width:640px){
+  .scene-portrait{
+    right: 2vw; bottom: 34vh;
+    width: 60vw;
+  }
+}
+
 /* ===== シーン画面（テキスト＋選択肢） ===== */
 #scene.active{
   display:flex;

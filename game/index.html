@@ -58,6 +58,7 @@
       </header>
       <div class="char-grid">
         <button class="char-card h-misaki" data-action="route" data-route="misaki">
+          <div class="char-portrait" data-initial="美"></div>
           <span class="char-tag">ギャル系</span>
           <div class="char-body">
             <div class="char-name">星野 美咲<span class="char-age">20 / 経営学部2年</span></div>
@@ -66,6 +67,7 @@
           </div>
         </button>
         <button class="char-card h-shiori" data-action="route" data-route="shiori">
+          <div class="char-portrait" data-initial="詩"></div>
           <span class="char-tag">才女・お嬢様</span>
           <div class="char-body">
             <div class="char-name">白石 詩織<span class="char-age">21 / 文学部3年</span></div>
@@ -74,6 +76,7 @@
           </div>
         </button>
         <button class="char-card h-reina" data-action="route" data-route="reina">
+          <div class="char-portrait" data-initial="玲"></div>
           <span class="char-tag">クール系 先輩</span>
           <div class="char-body">
             <div class="char-name">黒川 玲奈<span class="char-age">22 / 法学部4年</span></div>
@@ -82,6 +85,7 @@
           </div>
         </button>
         <button class="char-card h-hikari" data-action="route" data-route="hikari">
+          <div class="char-portrait" data-initial="ひ"></div>
           <span class="char-tag">元気系 後輩</span>
           <div class="char-body">
             <div class="char-name">藤村 ひかり<span class="char-age">19 / 教育学部1年</span></div>
@@ -94,6 +98,10 @@
 
     <!-- 本編シーン -->
     <section id="scene" class="screen">
+      <div class="scene-stage">
+        <div class="scene-portrait" id="scene-portrait"></div>
+        <div class="scene-overlay"></div>
+      </div>
       <div class="scene-hud">
         <div class="hud-left">
           <button class="btn ghost tiny" data-action="to-title">▤ タイトル</button>
