@@ -36,6 +36,11 @@ const Engine = (() => {
     state.scenes = sceneMap || {};
   }
 
+  // 複数ファイルから追記したい時に使う
+  function addScenes(sceneMap){
+    Object.assign(state.scenes, sceneMap || {});
+  }
+
   function playScene(id){
     const scene = state.scenes[id];
     if (!scene){
@@ -146,54 +151,19 @@ const Engine = (() => {
     });
   });
 
-  return { showScreen, loadScenes, playScene, advance };
+  return { showScreen, loadScenes, addScenes, playScene, advance };
 })();
 
 
 /* ============================================================
- * 動作確認用のサンプルシナリオ
- * （本編データが揃ったら外部ファイルに差し替え予定）
+ * 起動：URLハッシュで再生シーンを切り替え
+ *   例) index.html#shiori_s1
+ *   未指定なら misaki_s1 を再生
+ *
+ *   scenarios/*.js の読み込み完了後に起動させるため、
+ *   DOMContentLoaded ではなく load を使う
  * ============================================================ */
-Engine.loadScenes({
-  s1: {
-    id: "s1",
-    lines: [
-      { who: "ナレーション", text: "春、東都大学。桜がまだ少しだけ残る、四月のキャンパス。" },
-      { who: "ナレーション", text: "二限の教室へ向かう途中、中庭のベンチで見覚えのある顔を見かけた。" },
-      { who: "美咲",        text: "あ、ちょうどよかった〜！ねえ、ちょっといい？" },
-    ],
-    prompt: "どうする？",
-    choices: [
-      { label: "「どうしたの？」と声をかける", next: "s2a" },
-      { label: "気づかないふりで通り過ぎる",   next: "s2b" },
-    ],
-  },
-  s2a: {
-    id: "s2a",
-    lines: [
-      { who: "美咲", text: "やっぱ優しいじゃん、キミ。うちさ、課題のプリント落としちゃって…一緒に探してくんない？" },
-      { who: "ナレーション", text: "（距離が少し、縮まった気がする。）" },
-    ],
-    next: "s_end",
-  },
-  s2b: {
-    id: "s2b",
-    lines: [
-      { who: "ナレーション", text: "聞こえないふりをして、そのまま歩き去った。" },
-      { who: "美咲",        text: "…え、ちょ、無視？マジで？" },
-    ],
-    next: "s_end",
-  },
-  s_end: {
-    id: "s_end",
-    lines: [
-      { who: "ナレーション", text: "（サンプルシナリオ：ここまで。）" },
-    ],
-    // next も choices もないので停止
-  },
-});
-
-// 動作確認：最初のシーンを再生
-document.addEventListener('DOMContentLoaded', () => {
-  Engine.playScene('s1');
+window.addEventListener('load', () => {
+  const startId = (location.hash || '#misaki_s1').replace('#','');
+  Engine.playScene(startId);
 });
