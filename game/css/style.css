@@ -170,48 +170,43 @@ body{
 .scene-stage{
   position:fixed; inset:0; pointer-events:none;
   z-index:0;
+  overflow:hidden;
+}
+/* ステージ全体にふんわり背景のグラデ（立ち絵のトーンに合わせる） */
+.scene-stage::before{
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(255,106,162,.06), transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(120,140,255,.05), transparent 55%);
+  pointer-events:none;
 }
 .scene-portrait{
   position:absolute;
-  right: 4vw; bottom: 32vh;  /* テキストボックスの上に乗らない位置 */
-  width: min(38vw, 420px);
-  aspect-ratio: 3 / 4;
-  border-radius: 18px 18px 0 0;
-  background-size: cover;
-  background-position: center 12%;
+  /* 画面右寄り・下に沈むようにして "立っている" ように見せる */
+  right: 6vw;
+  bottom: -6vh;
+  height: 96vh;
+  width: min(56vw, 640px);
+  background-size: contain;
+  background-position: center bottom;
   background-repeat: no-repeat;
-  filter: drop-shadow(0 24px 40px rgba(0,0,0,.55));
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,.55));
   opacity: 0;
-  transform: translateY(18px) scale(.98);
-  transition: opacity .4s ease, transform .4s ease, filter .3s ease, background-image .2s ease;
+  transform: translateY(14px) scale(.99);
+  transition: opacity .45s ease, transform .45s ease, filter .3s ease, background-image .25s ease;
 }
 .scene-portrait.show{ opacity: 1; transform: translateY(0) scale(1); }
-.scene-portrait.dim { filter: drop-shadow(0 24px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.9); }
+.scene-portrait.dim { filter: drop-shadow(0 20px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.85); }
 
-/* 背景：画像 + フォールバックグラデ（画像が無くても違和感ないよう色で立ち絵シルエット） */
-.scene-portrait.h-misaki{
-  background-image:
-    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/misaki.png'),
-    linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%);
-}
-.scene-portrait.h-shiori{
-  background-image:
-    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/shiori.png'),
-    linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%);
-}
-.scene-portrait.h-reina{
-  background-image:
-    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/reina.png'),
-    linear-gradient(160deg, var(--h-reina) 0%, #1d152e 100%);
-}
-.scene-portrait.h-hikari{
-  background-image:
-    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/hikari.png'),
-    linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%);
+/* 背景：画像のみ（無い場合は下のフォールバック色が出る） */
+.scene-portrait.h-misaki{ background-image: url('assets/misaki.png'), linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%); }
+.scene-portrait.h-shiori{ background-image: url('assets/shiori.png'), linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%); }
+.scene-portrait.h-reina { background-image: url('assets/reina.png'),  linear-gradient(160deg, var(--h-reina)  0%, #1d152e 100%); }
+.scene-portrait.h-hikari{ background-image: url('assets/hikari.png'), linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%); }
+.scene-portrait.h-misaki, .scene-portrait.h-shiori, .scene-portrait.h-reina, .scene-portrait.h-hikari{
+  background-size: contain, cover;
+  background-position: center bottom, center;
 }
 .scene-overlay{ display:none; }
 
@@ -219,11 +214,28 @@ body{
 #scene .scene-hud{ z-index: 5; }
 #scene .scene-box{ position:relative; z-index: 3; }
 
-/* モバイル：立ち絵を小さく & 少し下に */
+/* テキストボックスは下から重ねて、立ち絵の足元に被せる */
+#scene .scene-box{
+  background: linear-gradient(180deg, rgba(18,14,22,.86) 0%, rgba(12,9,16,.98) 40%);
+  backdrop-filter: blur(6px);
+}
+
+/* タブレット：立ち絵少し寄せ */
+@media (max-width:960px){
+  .scene-portrait{
+    right: 0; width: 70vw; height: 88vh;
+  }
+}
+/* モバイル：立ち絵を中央寄せで大きく */
 @media (max-width:640px){
   .scene-portrait{
-    right: 2vw; bottom: 34vh;
-    width: 60vw;
+    left: 50%; right:auto;
+    transform: translateX(-50%) translateY(14px) scale(.99);
+    width: 100vw; height: 80vh;
+    bottom: -4vh;
+  }
+  .scene-portrait.show{
+    transform: translateX(-50%) translateY(0) scale(1);
   }
 }
 

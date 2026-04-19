@@ -154,6 +154,16 @@ const Engine = (() => {
     renderLine();
   }
 
+  // ---------- 立ち絵プリロード ----------
+  function preloadPortraits(){
+    HEROINES.forEach(k => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.src = `assets/${k}.png`;
+    });
+  }
+
   // ---------- 立ち絵制御 ----------
   function setPortrait(key){
     const el = document.getElementById('scene-portrait');
@@ -471,6 +481,7 @@ const Engine = (() => {
 
     updatePlayerNameBadge();
     updateModeButtons();
+    preloadPortraits();
   });
 
   const publicAPI = {
