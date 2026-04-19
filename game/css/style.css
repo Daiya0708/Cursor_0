@@ -70,6 +70,17 @@ body{
 }
 .btn.ghost{ background:transparent; }
 .btn.tiny{ padding:6px 12px; font-size:12px; }
+.btn.harem{
+  background: linear-gradient(135deg, #ff7fb6 0%, #b09ac8 50%, #6fb7ff 100%);
+  border-color: transparent; color: #1c0a13; font-weight:800; letter-spacing:.12em;
+  box-shadow: 0 12px 28px rgba(255,127,182,.35), 0 4px 10px rgba(111,183,255,.2), inset 0 1px 0 rgba(255,255,255,.35);
+  animation: haremShine 3.6s ease-in-out infinite;
+}
+@keyframes haremShine{
+  0%,100%{ filter: brightness(1); }
+  50%    { filter: brightness(1.08) saturate(1.08); }
+}
+.hidden{ display:none !important; }
 .bar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; gap:12px; }
 .bar h2{ margin:0; font-weight:600; letter-spacing:.1em; }
 
@@ -135,6 +146,114 @@ body{
 .char-card.h-shiori{ --accent-col: var(--h-shiori); }
 .char-card.h-reina { --accent-col: var(--h-reina);  }
 .char-card.h-hikari{ --accent-col: var(--h-hikari); }
+
+/* ===== キャラカードのポートレート ===== */
+.char-portrait{
+  position:relative;
+  aspect-ratio: 3/4;
+  margin: -20px -20px 14px;      /* カードの内側padding相殺 */
+  border-radius: 18px 18px 0 0;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  /* 最下層：フォールバックのグラデ。画像が無い/読み込み失敗でも見える */
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%),
+    linear-gradient(135deg, var(--accent-col), rgba(0,0,0,.35));
+  transition: transform .6s ease;
+}
+.char-card:hover .char-portrait{ transform: scale(1.03); }
+.char-portrait::after{
+  /* 画像が無いときに見える "イニシャル"。画像読み込み後は透明になるので目立たない */
+  content: attr(data-initial);
+  font-size: 64px; font-weight: 900; letter-spacing:.08em;
+  color: rgba(255,255,255,.22);
+  text-shadow: 0 2px 16px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+/* 画像が存在すればそれを最前面に敷く（無ければ silent fail して下のグラデが見える） */
+.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+/* 画像が乗っている場合はイニシャルを消す */
+.char-card.h-misaki .char-portrait::after,
+.char-card.h-shiori .char-portrait::after,
+.char-card.h-reina  .char-portrait::after,
+.char-card.h-hikari .char-portrait::after{ content:none; }
+.char-card .char-tag{ position:relative; z-index:1; margin-top:-6px; }
+
+/* ===== シーン立ち絵 ===== */
+.scene-stage{
+  position:fixed; inset:0; pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+/* ステージ全体にふんわり背景のグラデ（立ち絵のトーンに合わせる） */
+.scene-stage::before{
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(255,106,162,.06), transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(120,140,255,.05), transparent 55%);
+  pointer-events:none;
+}
+.scene-portrait{
+  position:absolute;
+  /* 画面右寄り・下に沈むようにして "立っている" ように見せる */
+  right: 6vw;
+  bottom: -6vh;
+  height: 96vh;
+  width: min(56vw, 640px);
+  background-size: contain;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,.55));
+  opacity: 0;
+  transform: translateY(14px) scale(.99);
+  transition: opacity .45s ease, transform .45s ease, filter .3s ease, background-image .25s ease;
+}
+.scene-portrait.show{ opacity: 1; transform: translateY(0) scale(1); }
+.scene-portrait.dim { filter: drop-shadow(0 20px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.85); }
+
+/* 背景：画像のみ（無い場合は下のフォールバック色が出る） */
+.scene-portrait.h-misaki{ background-image: url('assets/misaki.png'), linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%); }
+.scene-portrait.h-shiori{ background-image: url('assets/shiori.png'), linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%); }
+.scene-portrait.h-reina { background-image: url('assets/reina.png'),  linear-gradient(160deg, var(--h-reina)  0%, #1d152e 100%); }
+.scene-portrait.h-hikari{ background-image: url('assets/hikari.png'), linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%); }
+.scene-portrait.h-misaki, .scene-portrait.h-shiori, .scene-portrait.h-reina, .scene-portrait.h-hikari{
+  background-size: contain, cover;
+  background-position: center bottom, center;
+}
+.scene-overlay{ display:none; }
+
+/* シーン本文はステージの上にくるよう z-index */
+#scene .scene-hud{ z-index: 5; }
+#scene .scene-box{ position:relative; z-index: 3; }
+
+/* テキストボックスは下から重ねて、立ち絵の足元に被せる */
+#scene .scene-box{
+  background: linear-gradient(180deg, rgba(18,14,22,.86) 0%, rgba(12,9,16,.98) 40%);
+  backdrop-filter: blur(6px);
+}
+
+/* タブレット：立ち絵少し寄せ */
+@media (max-width:960px){
+  .scene-portrait{
+    right: 0; width: 70vw; height: 88vh;
+  }
+}
+/* モバイル：立ち絵を中央寄せで大きく */
+@media (max-width:640px){
+  .scene-portrait{
+    left: 50%; right:auto;
+    transform: translateX(-50%) translateY(14px) scale(.99);
+    width: 100vw; height: 80vh;
+    bottom: -4vh;
+  }
+  .scene-portrait.show{
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
 
 /* ===== シーン画面（テキスト＋選択肢） ===== */
 #scene.active{
@@ -325,16 +444,46 @@ body[data-route="hikari"]{
   background:linear-gradient(135deg, rgba(255,106,162,.18) 0%, rgba(255,184,107,.10) 100%);
   border-bottom:1px solid var(--line);
   text-align:center;
+  overflow:hidden;
 }
 .ending-wrap.theme-misaki .ending-banner{ background:linear-gradient(135deg, rgba(255,127,182,.22), rgba(255,184,107,.10)); }
 .ending-wrap.theme-shiori .ending-banner{ background:linear-gradient(135deg, rgba(217,199,167,.22), rgba(255,255,255,.05)); }
 .ending-wrap.theme-reina  .ending-banner{ background:linear-gradient(135deg, rgba(176,154,200,.22), rgba(90,70,140,.10)); }
 .ending-wrap.theme-hikari .ending-banner{ background:linear-gradient(135deg, rgba(111,183,255,.22), rgba(255,106,162,.08)); }
+/* エンディングバナー背景にヒロイン画像をうっすら重ねる */
+.ending-banner::before{
+  content:''; position:absolute; inset:0;
+  background-size: cover; background-position: center 18%;
+  background-repeat: no-repeat;
+  opacity:.35; filter: saturate(.9) contrast(1.02);
+  pointer-events:none;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
+}
+.ending-wrap.theme-misaki .ending-banner::before{ background-image: url('assets/misaki.png'); }
+.ending-wrap.theme-shiori .ending-banner::before{ background-image: url('assets/shiori.png'); }
+.ending-wrap.theme-reina  .ending-banner::before{ background-image: url('assets/reina.png'); }
+.ending-wrap.theme-hikari .ending-banner::before{ background-image: url('assets/hikari.png'); }
+.ending-wrap.theme-harem  .ending-banner{
+  background: linear-gradient(135deg, rgba(255,127,182,.22) 0%, rgba(217,199,167,.16) 33%, rgba(176,154,200,.18) 66%, rgba(111,183,255,.22) 100%);
+}
+.ending-wrap.theme-harem .ending-banner::before{
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.2), transparent 35%, transparent 65%, rgba(0,0,0,.2)),
+    url('assets/misaki.png') left   bottom / 25% 100% no-repeat,
+    url('assets/shiori.png') 33%    bottom / 25% 100% no-repeat,
+    url('assets/reina.png')  66%    bottom / 25% 100% no-repeat,
+    url('assets/hikari.png') right  bottom / 25% 100% no-repeat;
+  opacity:.42;
+}
+.ending-banner > *{ position:relative; z-index:1; }
 
 .ending-label{
   color:#ffe1ea; font-size:11px; letter-spacing:.45em; margin-bottom:8px;
 }
 .ending-wrap.is-normal .ending-label{ color:#d6c8ce; }
+.ending-wrap.is-after  .ending-label{ color:#ffe7b0; letter-spacing:.42em; }
+.ending-wrap.is-after  .ending-banner{ filter: saturate(1.05); }
 .ending-heroine{
   color:var(--sub); font-size:12px; letter-spacing:.2em; margin-bottom:10px;
 }
