@@ -199,22 +199,22 @@ body{
 }
 .scene-portrait{
   position:absolute;
-  /* 画面右側にフレーム風に配置。写真素材を顔基準でクロップ */
-  right: 4vw;
-  top: 8vh;
+  /* 画面中央上部にフレーム風に配置。写真素材を顔基準でクロップ */
+  left: 50%;
+  top: 6vh;
   height: 62vh;
-  width: min(44vw, 520px);
+  width: min(56vw, 620px);
+  transform: translateX(-50%) translateY(14px) scale(.99);
   border-radius: 14px;
   overflow:hidden;
   background-size: cover;
-  background-position: center 28%;  /* 顔が見える位置 */
+  background-position: center 28%;
   background-repeat: no-repeat;
   box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06) inset;
   opacity: 0;
-  transform: translateY(14px) scale(.99);
   transition: opacity .45s ease, transform .45s ease, filter .3s ease, background-image .25s ease;
 }
-.scene-portrait.show{ opacity: 1; transform: translateY(0) scale(1); }
+.scene-portrait.show{ opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 .scene-portrait.dim { filter: brightness(.55) saturate(.85); }
 
 /* 背景：画像のみ（無い場合は下のフォールバック色が出る） */
@@ -238,21 +238,17 @@ body{
   backdrop-filter: blur(6px);
 }
 
-/* タブレット：立ち絵少し寄せ */
+/* タブレット */
 @media (max-width:960px){
   .scene-portrait{
-    right: 3vw; width: 50vw; height: 54vh;
+    width: 72vw; height: 54vh;
   }
 }
-/* モバイル：立ち絵を中央上寄り */
+/* モバイル */
 @media (max-width:640px){
   .scene-portrait{
-    left: 50%; right:auto; top: 5vh;
-    transform: translateX(-50%) translateY(14px) scale(.99);
+    top: 4vh;
     width: 92vw; height: 46vh;
-  }
-  .scene-portrait.show{
-    transform: translateX(-50%) translateY(0) scale(1);
   }
 }
 
