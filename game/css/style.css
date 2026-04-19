@@ -139,7 +139,7 @@ body{
 /* ===== キャラカードのポートレート ===== */
 .char-portrait{
   position:relative;
-  aspect-ratio: 16/10;
+  aspect-ratio: 3/4;
   margin: -20px -20px 14px;      /* カードの内側padding相殺 */
   border-radius: 18px 18px 0 0;
   overflow:hidden;
@@ -148,22 +148,27 @@ body{
   background:
     linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%),
     linear-gradient(135deg, var(--accent-col), rgba(0,0,0,.35));
+  transition: transform .6s ease;
 }
+.char-card:hover .char-portrait{ transform: scale(1.03); }
 .char-portrait::after{
-  /* 画像が無いときに見える "イニシャル"。画像が読み込めれば画像で覆われる */
+  /* 画像が無いときに見える "イニシャル"。画像読み込み後は透明になるので目立たない */
   content: attr(data-initial);
   font-size: 64px; font-weight: 900; letter-spacing:.08em;
-  color: rgba(255,255,255,.8);
+  color: rgba(255,255,255,.22);
   text-shadow: 0 2px 16px rgba(0,0,0,.5);
+  pointer-events:none;
 }
 /* 画像が存在すればそれを最前面に敷く（無ければ silent fail して下のグラデが見える） */
-.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-/* 画像が読み込まれたときはイニシャルを消す：画像の有無は JS でなく "画像が下の層にある時" という状態を CSS 変数で区切る。
-   ここでは常にイニシャルが薄く透けて見えても違和感ない設計にしてあるため、画像読み込み後もうっすら透ける想定。
-   キレイに消したい場合は .char-portrait::after { content: none; } を各クラスに付与する。 */
+.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+/* 画像が乗っている場合はイニシャルを消す */
+.char-card.h-misaki .char-portrait::after,
+.char-card.h-shiori .char-portrait::after,
+.char-card.h-reina  .char-portrait::after,
+.char-card.h-hikari .char-portrait::after{ content:none; }
 .char-card .char-tag{ position:relative; z-index:1; margin-top:-6px; }
 
 /* ===== シーン立ち絵 ===== */
@@ -428,11 +433,27 @@ body[data-route="hikari"]{
   background:linear-gradient(135deg, rgba(255,106,162,.18) 0%, rgba(255,184,107,.10) 100%);
   border-bottom:1px solid var(--line);
   text-align:center;
+  overflow:hidden;
 }
 .ending-wrap.theme-misaki .ending-banner{ background:linear-gradient(135deg, rgba(255,127,182,.22), rgba(255,184,107,.10)); }
 .ending-wrap.theme-shiori .ending-banner{ background:linear-gradient(135deg, rgba(217,199,167,.22), rgba(255,255,255,.05)); }
 .ending-wrap.theme-reina  .ending-banner{ background:linear-gradient(135deg, rgba(176,154,200,.22), rgba(90,70,140,.10)); }
 .ending-wrap.theme-hikari .ending-banner{ background:linear-gradient(135deg, rgba(111,183,255,.22), rgba(255,106,162,.08)); }
+/* エンディングバナー背景にヒロイン画像をうっすら重ねる */
+.ending-banner::before{
+  content:''; position:absolute; inset:0;
+  background-size: cover; background-position: center 18%;
+  background-repeat: no-repeat;
+  opacity:.35; filter: saturate(.9) contrast(1.02);
+  pointer-events:none;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
+}
+.ending-wrap.theme-misaki .ending-banner::before{ background-image: url('assets/misaki.png'); }
+.ending-wrap.theme-shiori .ending-banner::before{ background-image: url('assets/shiori.png'); }
+.ending-wrap.theme-reina  .ending-banner::before{ background-image: url('assets/reina.png'); }
+.ending-wrap.theme-hikari .ending-banner::before{ background-image: url('assets/hikari.png'); }
+.ending-banner > *{ position:relative; z-index:1; }
 
 .ending-label{
   color:#ffe1ea; font-size:11px; letter-spacing:.45em; margin-bottom:8px;
