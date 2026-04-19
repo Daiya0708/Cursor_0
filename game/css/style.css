@@ -70,6 +70,17 @@ body{
 }
 .btn.ghost{ background:transparent; }
 .btn.tiny{ padding:6px 12px; font-size:12px; }
+.btn.harem{
+  background: linear-gradient(135deg, #ff7fb6 0%, #b09ac8 50%, #6fb7ff 100%);
+  border-color: transparent; color: #1c0a13; font-weight:800; letter-spacing:.12em;
+  box-shadow: 0 12px 28px rgba(255,127,182,.35), 0 4px 10px rgba(111,183,255,.2), inset 0 1px 0 rgba(255,255,255,.35);
+  animation: haremShine 3.6s ease-in-out infinite;
+}
+@keyframes haremShine{
+  0%,100%{ filter: brightness(1); }
+  50%    { filter: brightness(1.08) saturate(1.08); }
+}
+.hidden{ display:none !important; }
 .bar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; gap:12px; }
 .bar h2{ margin:0; font-weight:600; letter-spacing:.1em; }
 
@@ -453,6 +464,18 @@ body[data-route="hikari"]{
 .ending-wrap.theme-shiori .ending-banner::before{ background-image: url('assets/shiori.png'); }
 .ending-wrap.theme-reina  .ending-banner::before{ background-image: url('assets/reina.png'); }
 .ending-wrap.theme-hikari .ending-banner::before{ background-image: url('assets/hikari.png'); }
+.ending-wrap.theme-harem  .ending-banner{
+  background: linear-gradient(135deg, rgba(255,127,182,.22) 0%, rgba(217,199,167,.16) 33%, rgba(176,154,200,.18) 66%, rgba(111,183,255,.22) 100%);
+}
+.ending-wrap.theme-harem .ending-banner::before{
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.2), transparent 35%, transparent 65%, rgba(0,0,0,.2)),
+    url('assets/misaki.png') left   bottom / 25% 100% no-repeat,
+    url('assets/shiori.png') 33%    bottom / 25% 100% no-repeat,
+    url('assets/reina.png')  66%    bottom / 25% 100% no-repeat,
+    url('assets/hikari.png') right  bottom / 25% 100% no-repeat;
+  opacity:.42;
+}
 .ending-banner > *{ position:relative; z-index:1; }
 
 .ending-label{

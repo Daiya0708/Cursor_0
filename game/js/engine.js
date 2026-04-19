@@ -17,8 +17,8 @@
 
 const Engine = (() => {
   const HEROINES = ['misaki', 'shiori', 'reina', 'hikari'];
-  const NAMES    = { misaki:'美咲', shiori:'詩織', reina:'玲奈', hikari:'ひかり' };
-  const FULLNAMES= { misaki:'星野 美咲', shiori:'白石 詩織', reina:'黒川 玲奈', hikari:'藤村 ひかり' };
+  const NAMES    = { misaki:'美咲', shiori:'詩織', reina:'玲奈', hikari:'ひかり', harem:'4人全員' };
+  const FULLNAMES= { misaki:'星野 美咲', shiori:'白石 詩織', reina:'黒川 玲奈', hikari:'藤村 ひかり', harem:'星野 美咲 × 白石 詩織 × 黒川 玲奈 × 藤村 ひかり' };
   const NAME_TO_KEY = { '美咲':'misaki', '詩織':'shiori', '玲奈':'reina', 'ひかり':'hikari' };
   const STORE_PROG = 'campus_heart_progress_v1';
   const STORE_NAME = 'campus_heart_player_name_v1';
@@ -29,8 +29,18 @@ const Engine = (() => {
     const el = document.getElementById(id);
     if (el) el.classList.add('active');
     if (id === 'gallery') { refreshGallery(); updatePlayerNameBadge(); }
+    if (id === 'title')   { refreshHaremUnlock(); }
     // シーン以外に移ったら auto/skip は解除
     if (id !== 'scene') { state.autoMode = false; state.skipMode = false; clearTimeout(state.autoTimer); updateModeButtons(); }
+  }
+
+  // ---------- ハーレムルート解放判定 ----------
+  function refreshHaremUnlock(){
+    const btn = document.getElementById('btn-harem');
+    if (!btn) return;
+    const p = loadProgress();
+    const allTrue = HEROINES.every(k => p[k] && p[k].good);
+    btn.classList.toggle('hidden', !allTrue);
   }
 
   // ---------- ステート ----------
@@ -139,6 +149,10 @@ const Engine = (() => {
       state.currentRoute = prefix;
       applyTheme(prefix);
       setPortrait(prefix);  // シーン開始時にルートヒロインの立ち絵
+    } else if (prefix === 'harem'){
+      state.currentRoute = 'harem';
+      applyTheme('harem');
+      clearPortrait();      // ハーレムシーンは全員の想像空間なので立ち絵なし
     } else {
       clearPortrait();
     }
@@ -326,7 +340,8 @@ const Engine = (() => {
     const score   = state.affection[route] || 0;
     const isGood  = scene.endType === 'good';
     const isAfter = scene.endType === 'after';
-    const label   = isAfter ? 'AFTER  STORY' : (isGood ? 'TRUE  ENDING' : 'NORMAL  ENDING');
+    const isHarem = route === 'harem';
+    const label   = isHarem ? 'HAREM  ENDING' : (isAfter ? 'AFTER  STORY' : (isGood ? 'TRUE  ENDING' : 'NORMAL  ENDING'));
     const heroine = FULLNAMES[route] || '';
     const title   = scene.title || (isGood ? '届いた想い' : 'やさしい距離');
     const epi     = substitute(scene.epilogue || '');
@@ -338,10 +353,13 @@ const Engine = (() => {
     const wrap = document.getElementById('ending-wrap');
     wrap.className = `ending-wrap theme-${route} ${isAfter ? 'is-after' : (isGood ? 'is-good' : 'is-normal')}`;
 
-    const afterBtn = (isGood && hasAfter)
+    const afterBtn = (isGood && hasAfter && !isHarem)
       ? `<button class="btn primary" data-action="play-scene" data-scene="${route}_after">ふたりの続きを見る ▶</button>`
       : '';
-    const scoreBadge = isAfter ? '' : `<div class="ending-score">♥ ${score} / 9</div>`;
+    const routeBtn = isHarem
+      ? ''
+      : `<button class="btn${afterBtn ? '' : ' primary'}" data-action="route" data-route="${route}">もう一度このヒロインへ</button>`;
+    const scoreBadge = (isAfter || isHarem) ? '' : `<div class="ending-score">♥ ${score} / 9</div>`;
 
     wrap.innerHTML = `
       <div class="ending-banner">
@@ -354,7 +372,7 @@ const Engine = (() => {
         <p class="ending-text">${epi.replace(/\n/g,'<br>')}</p>
         <div class="ending-actions">
           ${afterBtn}
-          <button class="btn${afterBtn ? '' : ' primary'}" data-action="route" data-route="${route}">もう一度このヒロインへ</button>
+          ${routeBtn}
           <button class="btn" data-action="to-gallery">別のヒロインを選ぶ</button>
           <button class="btn ghost" data-action="to-title">タイトルへ戻る</button>
         </div>
