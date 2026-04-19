@@ -325,27 +325,36 @@ const Engine = (() => {
     const route   = scene.route || state.currentRoute;
     const score   = state.affection[route] || 0;
     const isGood  = scene.endType === 'good';
-    const label   = isGood ? 'TRUE  ENDING' : 'NORMAL  ENDING';
+    const isAfter = scene.endType === 'after';
+    const label   = isAfter ? 'AFTER  STORY' : (isGood ? 'TRUE  ENDING' : 'NORMAL  ENDING');
     const heroine = FULLNAMES[route] || '';
     const title   = scene.title || (isGood ? '届いた想い' : 'やさしい距離');
     const epi     = substitute(scene.epilogue || '');
+    const hasAfter= !!state.scenes[`${route}_after`];
 
-    saveCompletion(route, scene.endType);
+    if (!isAfter) saveCompletion(route, scene.endType);
     state.autoMode = false; state.skipMode = false; updateModeButtons();
 
     const wrap = document.getElementById('ending-wrap');
-    wrap.className = `ending-wrap theme-${route} ${isGood ? 'is-good' : 'is-normal'}`;
+    wrap.className = `ending-wrap theme-${route} ${isAfter ? 'is-after' : (isGood ? 'is-good' : 'is-normal')}`;
+
+    const afterBtn = (isGood && hasAfter)
+      ? `<button class="btn primary" data-action="play-scene" data-scene="${route}_after">ふたりの続きを見る ▶</button>`
+      : '';
+    const scoreBadge = isAfter ? '' : `<div class="ending-score">♥ ${score} / 9</div>`;
+
     wrap.innerHTML = `
       <div class="ending-banner">
         <div class="ending-label">${label}</div>
         <div class="ending-heroine">${heroine}</div>
         <h2 class="ending-title">「${title}」</h2>
-        <div class="ending-score">♥ ${score} / 9</div>
+        ${scoreBadge}
       </div>
       <div class="ending-body">
         <p class="ending-text">${epi.replace(/\n/g,'<br>')}</p>
         <div class="ending-actions">
-          <button class="btn primary" data-action="route" data-route="${route}">もう一度このヒロインへ</button>
+          ${afterBtn}
+          <button class="btn${afterBtn ? '' : ' primary'}" data-action="route" data-route="${route}">もう一度このヒロインへ</button>
           <button class="btn" data-action="to-gallery">別のヒロインを選ぶ</button>
           <button class="btn ghost" data-action="to-title">タイトルへ戻る</button>
         </div>
@@ -463,6 +472,7 @@ const Engine = (() => {
         case 'new-game':   e.preventDefault(); startNewGame(); break;
         case 'confirm-name': e.preventDefault(); confirmName(); break;
         case 'route':      e.preventDefault(); playRoute(t.dataset.route); break;
+        case 'play-scene': e.preventDefault(); if (t.dataset.scene) playScene(t.dataset.scene); break;
         case 'log':        e.preventDefault(); openLog(); break;
         case 'close-log':  e.preventDefault(); closeLog(); break;
         case 'auto':       e.preventDefault(); toggleAuto(); break;

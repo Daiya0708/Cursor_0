@@ -459,6 +459,8 @@ body[data-route="hikari"]{
   color:#ffe1ea; font-size:11px; letter-spacing:.45em; margin-bottom:8px;
 }
 .ending-wrap.is-normal .ending-label{ color:#d6c8ce; }
+.ending-wrap.is-after  .ending-label{ color:#ffe7b0; letter-spacing:.42em; }
+.ending-wrap.is-after  .ending-banner{ filter: saturate(1.05); }
 .ending-heroine{
   color:var(--sub); font-size:12px; letter-spacing:.2em; margin-bottom:10px;
 }
