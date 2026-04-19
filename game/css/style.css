@@ -171,10 +171,10 @@ body{
   pointer-events:none;
 }
 /* 画像が存在すればそれを最前面に敷く（無ければ silent fail して下のグラデが見える） */
-.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
-.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
-.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
-.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('../assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('../assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('../assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
+.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.88) 100%), url('../assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 15%, center; }
 /* 画像が乗っている場合はイニシャルを消す */
 .char-card.h-misaki .char-portrait::after,
 .char-card.h-shiori .char-portrait::after,
@@ -216,10 +216,10 @@ body{
 .scene-portrait.dim { filter: drop-shadow(0 20px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.85); }
 
 /* 背景：画像のみ（無い場合は下のフォールバック色が出る） */
-.scene-portrait.h-misaki{ background-image: url('assets/misaki.png'), linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%); }
-.scene-portrait.h-shiori{ background-image: url('assets/shiori.png'), linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%); }
-.scene-portrait.h-reina { background-image: url('assets/reina.png'),  linear-gradient(160deg, var(--h-reina)  0%, #1d152e 100%); }
-.scene-portrait.h-hikari{ background-image: url('assets/hikari.png'), linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%); }
+.scene-portrait.h-misaki{ background-image: url('../assets/misaki.png'), linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%); }
+.scene-portrait.h-shiori{ background-image: url('../assets/shiori.png'), linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%); }
+.scene-portrait.h-reina { background-image: url('../assets/reina.png'),  linear-gradient(160deg, var(--h-reina)  0%, #1d152e 100%); }
+.scene-portrait.h-hikari{ background-image: url('../assets/hikari.png'), linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%); }
 .scene-portrait.h-misaki, .scene-portrait.h-shiori, .scene-portrait.h-reina, .scene-portrait.h-hikari{
   background-size: contain, cover;
   background-position: center bottom, center;
@@ -460,20 +460,20 @@ body[data-route="hikari"]{
   mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
   -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.0) 85%);
 }
-.ending-wrap.theme-misaki .ending-banner::before{ background-image: url('assets/misaki.png'); }
-.ending-wrap.theme-shiori .ending-banner::before{ background-image: url('assets/shiori.png'); }
-.ending-wrap.theme-reina  .ending-banner::before{ background-image: url('assets/reina.png'); }
-.ending-wrap.theme-hikari .ending-banner::before{ background-image: url('assets/hikari.png'); }
+.ending-wrap.theme-misaki .ending-banner::before{ background-image: url('../assets/misaki.png'); }
+.ending-wrap.theme-shiori .ending-banner::before{ background-image: url('../assets/shiori.png'); }
+.ending-wrap.theme-reina  .ending-banner::before{ background-image: url('../assets/reina.png'); }
+.ending-wrap.theme-hikari .ending-banner::before{ background-image: url('../assets/hikari.png'); }
 .ending-wrap.theme-harem  .ending-banner{
   background: linear-gradient(135deg, rgba(255,127,182,.22) 0%, rgba(217,199,167,.16) 33%, rgba(176,154,200,.18) 66%, rgba(111,183,255,.22) 100%);
 }
 .ending-wrap.theme-harem .ending-banner::before{
   background:
     linear-gradient(90deg, rgba(0,0,0,.2), transparent 35%, transparent 65%, rgba(0,0,0,.2)),
-    url('assets/misaki.png') left   bottom / 25% 100% no-repeat,
-    url('assets/shiori.png') 33%    bottom / 25% 100% no-repeat,
-    url('assets/reina.png')  66%    bottom / 25% 100% no-repeat,
-    url('assets/hikari.png') right  bottom / 25% 100% no-repeat;
+    url('../assets/misaki.png') left   bottom / 25% 100% no-repeat,
+    url('../assets/shiori.png') 33%    bottom / 25% 100% no-repeat,
+    url('../assets/reina.png')  66%    bottom / 25% 100% no-repeat,
+    url('../assets/hikari.png') right  bottom / 25% 100% no-repeat;
   opacity:.42;
 }
 .ending-banner > *{ position:relative; z-index:1; }
