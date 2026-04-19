@@ -199,21 +199,23 @@ body{
 }
 .scene-portrait{
   position:absolute;
-  /* 画面右寄り・下に沈むようにして "立っている" ように見せる */
-  right: 6vw;
-  bottom: -6vh;
-  height: 96vh;
-  width: min(56vw, 640px);
-  background-size: contain;
-  background-position: center bottom;
+  /* 画面右側にフレーム風に配置。写真素材を顔基準でクロップ */
+  right: 4vw;
+  top: 8vh;
+  height: 62vh;
+  width: min(44vw, 520px);
+  border-radius: 14px;
+  overflow:hidden;
+  background-size: cover;
+  background-position: center 28%;  /* 顔が見える位置 */
   background-repeat: no-repeat;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,.55));
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06) inset;
   opacity: 0;
   transform: translateY(14px) scale(.99);
   transition: opacity .45s ease, transform .45s ease, filter .3s ease, background-image .25s ease;
 }
 .scene-portrait.show{ opacity: 1; transform: translateY(0) scale(1); }
-.scene-portrait.dim { filter: drop-shadow(0 20px 40px rgba(0,0,0,.55)) brightness(.55) saturate(.85); }
+.scene-portrait.dim { filter: brightness(.55) saturate(.85); }
 
 /* 背景：画像のみ（無い場合は下のフォールバック色が出る） */
 .scene-portrait.h-misaki{ background-image: url('../assets/misaki.png'), linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%); }
@@ -221,8 +223,8 @@ body{
 .scene-portrait.h-reina { background-image: url('../assets/reina.png'),  linear-gradient(160deg, var(--h-reina)  0%, #1d152e 100%); }
 .scene-portrait.h-hikari{ background-image: url('../assets/hikari.png'), linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%); }
 .scene-portrait.h-misaki, .scene-portrait.h-shiori, .scene-portrait.h-reina, .scene-portrait.h-hikari{
-  background-size: contain, cover;
-  background-position: center bottom, center;
+  background-size: cover, cover;
+  background-position: center 28%, center;
 }
 .scene-overlay{ display:none; }
 
@@ -239,16 +241,15 @@ body{
 /* タブレット：立ち絵少し寄せ */
 @media (max-width:960px){
   .scene-portrait{
-    right: 0; width: 70vw; height: 88vh;
+    right: 3vw; width: 50vw; height: 54vh;
   }
 }
-/* モバイル：立ち絵を中央寄せで大きく */
+/* モバイル：立ち絵を中央上寄り */
 @media (max-width:640px){
   .scene-portrait{
-    left: 50%; right:auto;
+    left: 50%; right:auto; top: 5vh;
     transform: translateX(-50%) translateY(14px) scale(.99);
-    width: 100vw; height: 80vh;
-    bottom: -4vh;
+    width: 92vw; height: 46vh;
   }
   .scene-portrait.show{
     transform: translateX(-50%) translateY(0) scale(1);
