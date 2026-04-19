@@ -157,10 +157,10 @@ body{
   text-shadow: 0 2px 16px rgba(0,0,0,.5);
 }
 /* 画像が存在すればそれを最前面に敷く（無ければ silent fail して下のグラデが見える） */
-.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/misaki.jpg'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/shiori.jpg'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/reina.jpg'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
-.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/hikari.jpg'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-misaki .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/misaki.png'), linear-gradient(135deg, var(--h-misaki), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-shiori .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/shiori.png'), linear-gradient(135deg, var(--h-shiori), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-reina  .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/reina.png'),  linear-gradient(135deg, var(--h-reina),  rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
+.char-card.h-hikari .char-portrait{ background-image: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(14,11,18,.85) 100%), url('assets/hikari.png'), linear-gradient(135deg, var(--h-hikari), rgba(0,0,0,.35)); background-size: cover, cover, cover; background-position: center, center 20%, center; }
 /* 画像が読み込まれたときはイニシャルを消す：画像の有無は JS でなく "画像が下の層にある時" という状態を CSS 変数で区切る。
    ここでは常にイニシャルが薄く透けて見えても違和感ない設計にしてあるため、画像読み込み後もうっすら透ける想定。
    キレイに消したい場合は .char-portrait::after { content: none; } を各クラスに付与する。 */
@@ -192,25 +192,25 @@ body{
 .scene-portrait.h-misaki{
   background-image:
     linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/misaki.jpg'),
+    url('assets/misaki.png'),
     linear-gradient(160deg, var(--h-misaki) 0%, #3b0f1e 100%);
 }
 .scene-portrait.h-shiori{
   background-image:
     linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/shiori.jpg'),
+    url('assets/shiori.png'),
     linear-gradient(160deg, var(--h-shiori) 0%, #2a1e0b 100%);
 }
 .scene-portrait.h-reina{
   background-image:
     linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/reina.jpg'),
+    url('assets/reina.png'),
     linear-gradient(160deg, var(--h-reina) 0%, #1d152e 100%);
 }
 .scene-portrait.h-hikari{
   background-image:
     linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(14,11,18,.9) 100%),
-    url('assets/hikari.jpg'),
+    url('assets/hikari.png'),
     linear-gradient(160deg, var(--h-hikari) 0%, #0d1e33 100%);
 }
 .scene-overlay{ display:none; }
